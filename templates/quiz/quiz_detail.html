@@ -1,0 +1,19 @@
+{% extends "quiz/base_quiz.html" %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content_title %}
+	<h2>{{ quiz.title }}</h2>
+{% endblock %}
+
+{% block content %}
+	<form action="{% url process_quiz %}" method="post" accept-charset="utf-8">
+		{% for form in form_list %}
+			<fieldset>
+				<legend>{{ form.question }}</legend>
+				{{ form.as_p }}
+			</fieldset>
+		{% endfor %}
+		<p><input type="submit" value="Done &rarr;"></p>
+	</form>
+{% endblock %}

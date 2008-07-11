@@ -1,0 +1,23 @@
+{% extends "quiz/base_quiz.html" %}
+
+{% block title %}Quiz Dashboard{% endblock %}
+
+{% block content_title %}
+	<h2>Quiz Dashboard</h2>
+{% endblock %}
+
+{% block content %}
+	<h3>Quizzes not Started</h3>
+	<ul class="link_list">
+		{% for quiz in quizzes %}
+			<li><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a></li>
+		{% endfor %}
+	</ul>
+	
+	<h3>Quizzes Completed</h3>
+	<ul class="link_list">
+		{% for score in scores %}
+			<li>{{ score.quiz.title }} ({{ score.corrent_anwser_count }}/{{ score.total_quiestions }})</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
