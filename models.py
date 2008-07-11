@@ -67,6 +67,12 @@ class Quiz(models.Model):
 		return ('quiz_detail', None, {
 			'slug':	self.slug,
 		})
+	
+	@permalink
+	def get_process_quiz_url(self):
+		return ('process_quiz', None, {
+			'slug':	self.slug,
+		})
 
 class Answer(models.Model):
 	answer	= models.TextField(_('answer'))
@@ -98,7 +104,7 @@ class Question(models.Model):
 		list_display	= ('title', 'quiz')
 		list_filter		= ('quiz',)
 		search_fields	= ('question',)
-	
+		
 	@property
 	def title(self):
 		return u"%s" % truncatewords_html(self.question, 10)
@@ -121,6 +127,12 @@ class Score(models.Model):
 	class Admin:
 		list_display	= ('quiz', 'student', 'corrent_anwser_count', 'total_quiestions',)
 		list_filter		= ('quiz', 'student')
+	
+	@permalink
+	def get_absolute_url(self):
+		return ('quiz_detail', None, {
+			'slug':	self.quiz.slug,
+		})
 	
 	@property
 	def corrent_anwser_count(self):

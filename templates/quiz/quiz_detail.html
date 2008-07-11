@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-	<form action="{% url process_quiz %}" method="post" accept-charset="utf-8">
+	<form action="{{ quiz.get_process_quiz_url }}" method="post" accept-charset="utf-8">
 		{% for form in form_list %}
 			<fieldset>
 				<legend>{{ form.question }}</legend>

@@ -1,0 +1,25 @@
+{% extends "quiz/base_quiz.html" %}
+{% load quiz %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content_title %}
+	<h2>{{ quiz.title }}</h2>
+{% endblock %}
+
+{% block content %}
+	<ul class="question_list">
+		{% for question in questions %}
+			{% if score.corrent_anwsers|intequaltest:question %}
+				This wont work
+			{% endif %}
+			<li class="{% ifequal score.corrent_anwsers.question question %}correct{% endifequal %}">{{ question.question }}
+				<ul>
+					{% for answer in question.answers.all %}
+						<li class="{% ifequal question.correct_answer answer %}correct{% endifequal %}">{{ answer.answer }}</li>
+					{% endfor %}
+				</ul>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

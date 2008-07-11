@@ -10,6 +10,11 @@ class QuestionForm(forms.Form):
 		self.question = question.question
 		answers = question.answers.order_by('weight')
 		self.fields['answers'].choices = [(i, a.answer) for i, a in enumerate(answers)]
+		
+		for pos, answer in enumerate(answers):
+			if answer.id == question.correct_answer_id:
+				self.correct = pos
+			break
 	
 	def is_correct(self):
 		if not self.is_valid():
