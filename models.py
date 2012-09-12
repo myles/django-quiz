@@ -3,22 +3,19 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.template.defaultfilters import truncatewords_html
-
+from django.contrib import admin
 from quiz.managers import *
 
 class Category(models.Model):
 	"""Category model."""
 	title		= models.CharField(_('title'), max_length=100)
-	slug		= models.SlugField(_('slug'), prepopulate_from=('title',), unique=True)
+	slug		= models.SlugField(_('slug'), unique=True)
 	
 	class Meta:
 		verbose_name = _('category')
 		verbose_name_plural = _('categories')
 		db_table = 'quiz_categories'
 		ordering = ('title',)
-	
-	class Admin:
-		pass
 	
 	def __unicode__(self):
 		return u'%s' % self.title
@@ -27,6 +24,12 @@ class Category(models.Model):
 	def get_absolute_url(self):
 		return ('quiz_category_detail', None, {'slug': self.slug})
 
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',)}
+	
+admin.site.register(Category, CategoryAdmin)
+
+
 class Quiz(models.Model):
 	STATUS_CHOICES = (
 		(1, _('Draft')),
@@ -34,10 +37,10 @@ class Quiz(models.Model):
 		(3, _('Close')),
 	)
 	title			= models.CharField(_('title'), max_length=100)
-	slug			= models.SlugField(_('slug'), prepopulate_from=("title",))
+	slug			= models.SlugField(_('slug'))
 	author			= models.ForeignKey(User, related_name='author')
 	description		= models.TextField(_('description'), blank=True, null=True)
-	status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, radio_admin=True, default=1)
+	status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
 	publish			= models.DateTimeField(_('publish'))
 	categories		= models.ManyToManyField(Category, blank=True)
 	students		= models.ManyToManyField(User, blank=True, null=True, related_name='students')
@@ -50,10 +53,6 @@ class Quiz(models.Model):
 		db_table			= 'quizzes'
 		ordering			= ('-publish',)
 	
-	class Admin:
-		list_display	= ('title', 'publish', 'status',)
-		list_filter		= ('publish', 'categories', 'status',)
-		search_fields	= ('title', 'description',)
 	
 	def __unicode__(self):
 		return u"%s" % self.title
@@ -73,6 +72,12 @@ class Quiz(models.Model):
 		return ('process_quiz', None, {
 			'slug':	self.slug,
 		})
+
+class QuizAdmin(admin.ModelAdmin):
+    prepopulate_fields = {'slug': ('title',)}
+    radio_fields = {'status': True}
+
+admin.site.register(Quiz, QuizAdmin)
 
 class Answer(models.Model):
 	answer	= models.TextField(_('answer'))
